@@ -45,7 +45,8 @@ This functionality brings a lot of performance enhancement to the app.
 1. docker network create -d bridge {bridgeName}
 2. docker run -d -p 6379:6379 --name {redis_name} --network {bridgeName} redis 
 3. docker ps (to see what is up and running)
-4. docker run --name {app_image_name} --link {bridge_name}:redis -d centos
+4. docker run --network {bridgeName} --name {app_image_name} -d {app_image_name}
+5. docker run --name {app_image_name} --link {bridge_name}:redis -d centos
 
 If second 4.2 step gives error run (`docker system prune`). But be careful because this command will remove
   - all stopped containers

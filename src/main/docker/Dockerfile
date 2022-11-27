@@ -1,4 +1,4 @@
-FROM azul/zulu-openjdk-alpine:17
+FROM openjdk:17-jdk-slim
 
 EXPOSE 8090
 ARG PROJECT_NAME=credit-decision-engine
