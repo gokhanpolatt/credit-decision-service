@@ -2,6 +2,8 @@ package com.inbank.creditdecisionengine.controller;
 
 import com.inbank.creditdecisionengine.BaseIntegrationTest;
 import com.inbank.creditdecisionengine.config.CreditDecisionConfig;
+import com.inbank.creditdecisionengine.dto.UserCreditResultDto;
+import com.inbank.creditdecisionengine.dto.UserInputDto;
 import com.inbank.creditdecisionengine.service.CreditDecisionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,14 +25,24 @@ class DecisionViewControllerTest extends BaseIntegrationTest {
     @MockBean
     private CreditDecisionConfig creditDecisionConfig;
 
-    private String creditScoreThreshold = "1";
-    private String maxCreditAmount = "10000";
-    private String minCreditAmount = "2000";
-    private String maxLoanPeriod = "12";
-    private String minLoanPeriod = "60";
+    private final String creditScoreThreshold = "1";
+    private final String maxCreditAmount = "10000";
+    private final String minCreditAmount = "2000";
+    private final String maxLoanPeriod = "12";
+    private final String minLoanPeriod = "60";
+
+    private final String identityNumber = "123";
+    private final Integer requestedLoanPeriod = 12;
+    private final Double requestedLoanAmount = 5000d;
 
     @BeforeEach
     public void before() {
+        UserInputDto userInputDto = UserInputDto.builder()
+                .requestedLoanPeriod(requestedLoanPeriod)
+                .requestedLoanAmount(requestedLoanAmount)
+                .identityNumber(identityNumber)
+                .build();
+
         Mockito.when(creditDecisionConfig.getCreditScoreThreshold())
                 .thenReturn(creditScoreThreshold);
         Mockito.when(creditDecisionConfig.getMaxCreditAmount())
@@ -41,6 +53,8 @@ class DecisionViewControllerTest extends BaseIntegrationTest {
                 .thenReturn(maxLoanPeriod);
         Mockito.when(creditDecisionConfig.getMinLoanPeriod())
                 .thenReturn(minLoanPeriod);
+        Mockito.when(creditDecisionService.getCreditResult(userInputDto))
+                .thenReturn(UserCreditResultDto.builder().build());
     }
 
     @Test
@@ -53,4 +67,16 @@ class DecisionViewControllerTest extends BaseIntegrationTest {
                 .andExpect(model().attributeExists("creditLimitations"));
     }
 
+    @Test
+    public void shouldReturnResultFragmentWithCorrectAttributes()
+            throws Exception {
+        mockMvc
+                .perform(get("/result")
+                        .param("id", identityNumber)
+                        .param("amount", String.valueOf(requestedLoanAmount))
+                        .param("period", String.valueOf(requestedLoanPeriod)))
+                .andExpect(status().isOk())
+                .andExpect(view().name("result_fragment :: result_frag"))
+                .andExpect(model().attributeExists("result"));
+    }
 }

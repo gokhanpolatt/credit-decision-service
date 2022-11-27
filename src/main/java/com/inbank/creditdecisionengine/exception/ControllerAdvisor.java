@@ -1,6 +1,7 @@
 package com.inbank.creditdecisionengine.exception;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,7 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 
         log.warn("Person not found");
 
-        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(body, HttpStatus.NO_CONTENT);
     }
 
     @Override
@@ -43,7 +44,7 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
         List<String> errors = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
-                .map(x -> x.getDefaultMessage())
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.toList());
 
         body.put("errors", errors);

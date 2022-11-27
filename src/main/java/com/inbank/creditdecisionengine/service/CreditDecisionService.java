@@ -37,18 +37,14 @@ public class CreditDecisionService {
     }
 
     public PersonInfoDto getPersonInfoFromExternalService(String identityNumber) {
-        PersonInfoDto personInfoDto = PersonInfoDto.builder().build();
-        for (int i = 0; i < 3; i++) {
-            System.out.println(thirdPartyCommunicationService.getPersonInfo(identityNumber));
-            personInfoDto = thirdPartyCommunicationService.getPersonInfo(identityNumber);
-        }
-        return personInfoDto;
+        return thirdPartyCommunicationService.getPersonInfo(identityNumber);
     }
 
     public UserCreditResultDto convertUserDataToCreditResult(UserInputDto userInputDto, PersonInfoDto personInfoDto) {
-        UserCreditResultDto userCreditResultDto = new UserCreditResultDto();
-        userCreditResultDto.setPersonInfo(personInfoDto);
-        userCreditResultDto.setUserInput(userInputDto);
+        UserCreditResultDto userCreditResultDto = UserCreditResultDto.builder().
+                personInfo(personInfoDto)
+                .userInput(userInputDto)
+                .build();
 
         if (DecisionServiceUtil.DEBT_SEGMENT.equals(personInfoDto.getSegment())) {
             log.info("User is not eligible to get loan");
@@ -98,6 +94,8 @@ public class CreditDecisionService {
                 }
             }
         }
+
+        log.info(String.valueOf(userCreditResultDto));
 
         return userCreditResultDto;
     }

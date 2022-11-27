@@ -1,4 +1,4 @@
-package com.inbank.creditdecisionengine.controller;
+package com.inbank.creditdecisionengine.external;
 
 import com.inbank.creditdecisionengine.dto.PersonInfoDto;
 import org.springframework.http.ResponseEntity;

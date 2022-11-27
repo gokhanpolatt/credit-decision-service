@@ -3,7 +3,6 @@ package com.inbank.creditdecisionengine.controller;
 import com.inbank.creditdecisionengine.config.CreditDecisionConfig;
 import com.inbank.creditdecisionengine.dto.UserCreditResultDto;
 import com.inbank.creditdecisionengine.dto.UserInputDto;
-import com.inbank.creditdecisionengine.exception.PersonNotFoundException;
 import com.inbank.creditdecisionengine.service.CreditDecisionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -25,13 +24,13 @@ public class DecisionViewController {
 
     @GetMapping("/index")
     public String showCreateUserForm(Model model) {
-        log.info("ICERDEMA");
         model.addAttribute("creditLimitations", creditDecisionConfig);
         return "index";
     }
 
     @GetMapping(path = "/result")
-    public String sendHtmlFragment5(@RequestParam("id") String id, @RequestParam("amount") Double amount, @RequestParam("period") Integer period, Model model) throws PersonNotFoundException {
+    public String sendHtmlFragment5(@RequestParam("id") String id, @RequestParam("amount") Double amount, @RequestParam("period") Integer period, Model model) {
+        log.info("A new credit result is requested by {} id", id);
         UserInputDto userInput = UserInputDto.builder().build();
         userInput.setIdentityNumber(id);
         userInput.setRequestedLoanAmount(amount);
