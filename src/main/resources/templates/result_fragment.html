@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="result_frag">
+    <div id="output">
+        <div th:if="${result} == null">
+            Wrong identity number
+        </div>
+
+        <div th:unless="${result} == null">
+            <div th:if="${result.isCreditSuitable}">
+                <div th:if="${result.creditScore} >= ${result.creditScoreThreshold}">
+                    You can get the loan. Also we can provide you up to <span th:text="${result.loanAmount}"/> Euros for
+                    <span th:text="${result.userInput.requestedLoanPeriod}"/> months period
+                </div>
+                <div th:unless="${result.creditScore} >= ${result.creditScoreThreshold}">
+
+                    <div th:if="${result.isSpecialOfferSuitable}">
+                        You can't get <span th:text="${result.userInput.requestedLoanAmount}"/> Euros for
+                        <span th:text="${result.userInput.requestedLoanPeriod}"/> months period.
+                        But we can provide you <span th:text="${result.loanAmount}"/> Euros for
+                        <span th:text="${result.period}"/> months period
+                    </div>
+
+                    <div th:unless="${result.isSpecialOfferSuitable}">
+                        <div th:if="${result.loanAmount} != null">
+                            You can't get <span th:text="${result.userInput.requestedLoanAmount}"/> Euros.
+                            But we can provide you <span th:text="${result.loanAmount}"/> Euros for
+                            <span th:text="${result.userInput.requestedLoanPeriod}"/> months period
+                        </div>
+                        <div th:unless="${result.loanAmount} != null">
+                            You can't get the loan for
+                            <span th:text="${result.userInput.requestedLoanPeriod}"/> months period.
+                            But we can provide you <span th:text="${result.userInput.requestedLoanAmount}"/> Euros for
+                            <span th:text="${result.period}"/> months period
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div th:unless="${result.isCreditSuitable}">
+                Sorry. You can't get any loan.
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

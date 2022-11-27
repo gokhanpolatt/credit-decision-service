@@ -1,0 +1,20 @@
+server.port: 8090
+
+spring:
+  cache:
+    redis:
+      host: localhost
+      port: 6379
+      time-to-live: 60000
+    type: redis
+
+inbank:
+  decisionService:
+    creditScoreThreshold: 1
+    minCreditAmount: 2000
+    maxCreditAmount: 10000
+    minLoanPeriod: 12
+    maxLoanPeriod: 60
+
+externalService:
+  url: http://localhost:8090/mockedService/personInfo

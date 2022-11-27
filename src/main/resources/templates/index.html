@@ -1,0 +1,69 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>GET A LOAN TODAY</title>
+
+    <link rel="stylesheet"
+          type="text/css"
+          href="https://cdn.datatables.net/v/bs4/dt-1.10.25/datatables.min.css"/>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+          integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l"
+          crossorigin="anonymous"/>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+</head>
+
+<body>
+
+<div class="container" style="min-height: 500px">
+
+    <div class="starter-template">
+        <h1>Check your credit availability</h1>
+
+        <div class="form-group form-group-lg">
+            <label class="col-sm-2 control-label">Identity Number</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" id="identityNumber"/>
+            </div>
+        </div>
+
+        <div class="form-group form-group-lg">
+            <label class="col-sm-2 control-label">Loan Amount(<span
+                    th:text="${creditLimitations.getMinCreditAmount()}"/>-<span
+                    th:text="${creditLimitations.getMaxCreditAmount()}"/>€)</label>
+            <div class="col-sm-6">
+                <input type="range" step="100" th:min="${creditLimitations.getMinCreditAmount()}"
+                       th:max="${creditLimitations.getMaxCreditAmount()}" id="loanAmount"
+                       oninput="this.nextElementSibling.value = this.value">
+                <output th:text="(${creditLimitations.getMinCreditAmount()} + ${creditLimitations.getMaxCreditAmount()}) / 2"></output>
+                €
+            </div>
+        </div>
+
+        <div class="form-group form-group-lg">
+            <label class="col-sm-2 control-label">Loan Period</label>
+            <div class="col-sm-6">
+                <select class="form-control" id="loanPeriod">
+                    <option value="" disabled selected>Select period</option>
+                    <option th:each="n : ${#numbers.sequence(creditLimitations.getMinLoanPeriod(),creditLimitations.getMaxLoanPeriod())}"
+                            th:value="${n}" th:text="${n}"/>
+                </select>
+            </div>
+        </div>
+
+        <script type="text/javascript" src="/js/get-result.js"></script>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-6">
+                <button class="btn btn-primary btn-lg"
+                        onclick="updateOutput()"
+                        id="check">Check
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="resultSegment"></div>
+</div>
+
+</body>
+</html>
